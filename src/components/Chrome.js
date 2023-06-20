@@ -1,32 +1,17 @@
 import React from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
-import { CloseButton, FullscreenButton, MinifyButton } from "./HeaderButton";
+import closeIcon from "./xmark.svg";
+import plusIcon from "./plus.svg";
 
-const TAB_COLOR = "#ebecee";
+const TAB_COLOR = "#ECEDEC";
 
-const Header = styled.div`
-  display: flex;
-  align-items: center;
-  height: ${(props) => props.height || "20px"};
-  background-color: ${(props) => props.backgroundColor || TAB_COLOR};
-  padding: 3px 10px 3px 10px;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-  & > *:not(:first-child) {
-    margin-left: 8px;
-  }
-`;
 const Tabs = styled.div`
   display: flex;
   height: ${(props) => props.height || "42px"};
-  // background: linear-gradient(180deg, #DFE1E5 0.6%, #DFE1E5 99.4%);
   background-color: ${TAB_COLOR};
-  border-top-left-radius: ${(props) => !props.borderDisable && "5px"};
-  border-top-right-radius: ${(props) => !props.borderDisable && "5px"};
-  padding-right: 13px;
-  padding-left: 13px;
 `;
+
 const Content = styled.div`
   height: 100%;
 `;
@@ -36,7 +21,6 @@ const StyledTab = styled.div`
   display: flex;
   flex: 1;
   justify-content: space-between;
-  margin-top: 7px;
   padding: 0 8px 0 8px;
   align-items: center;
   box-sizing: border-box;
@@ -90,13 +74,13 @@ export const Divider = styled.div`
   background-color: #7c7f82;
   height: 21px;
   width: 1px;
+  margin-left: 4px;
   margin-top: 14px;
 `;
 const CircleButton = styled.div`
   height: ${(props) => props.length || "16"}px;
   width: ${(props) => props.length || "16"}px;
   border-radius: ${(props) => props.length / 2 || "8"}px;
-  font-size: ${(props) => props.fontSize || "12"}px;
   background-color: ${(props) => props.color};
   margin: ${(props) => props.margin};
   display: flex;
@@ -106,13 +90,6 @@ const CircleButton = styled.div`
   &:hover {
     background-color: ${(props) => props.hoverColor || "lightgrey"};
   }
-`;
-
-const HeaderButtonContainer = styled.div`
-  padding-right: 13px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
 `;
 
 const Title = styled.span`
@@ -144,13 +121,25 @@ export const Tab = ({
       {imageUrl && (
         <img height={"16px"} width={"16px"} src={imageUrl} alt={imageAlt} />
       )}
-      {typeof title === "string" ? (
-        <Title margin={"0 6px 0 6px"}>{title}</Title>
-      ) : (
-        title
-      )}
-      <CircleButton tabIndex={0} alignItems={"center"} onClick={onClose}>
-        {"X"}
+      <Title margin={"0 6px 0 6px"}>{title}</Title>
+
+      <div></div>
+      <CircleButton
+        length={"8"}
+        tabIndex={0}
+        alignItems={"center"}
+        margin={"0px 4px 0px 0px"}
+        onClick={onClose}
+      >
+        <img
+          src={closeIcon}
+          draggable={false}
+          style={{
+            userSelect: "none",
+            width: "8px",
+            height: "8px",
+          }}
+        />
       </CircleButton>
     </StyledTab>
   );
@@ -160,7 +149,7 @@ Tab.propTypes = {
   isActive: PropTypes.bool,
   imageUrl: PropTypes.string,
   imageAlt: PropTypes.string,
-  title: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),
+  title: PropTypes.string,
   onClick: PropTypes.func,
   onClose: PropTypes.func,
 };
@@ -174,53 +163,32 @@ Tab.defaultProps = {
   onClose: () => {},
 };
 
-const StyledSpan = styled.span`
-  margin: 0;
-  margin-top: -4px;
-`;
-
 export const AddButton = (props) => {
   return (
     <CircleButton
       tabIndex={0}
-      length={28}
-      fontSize={22}
-      margin={"10px 0 0 8px"}
+      length={"12"}
+      margin={"0px 0 0 12px"}
       alignItems={"center"}
       {...props}
     >
-      <StyledSpan>{"+"}</StyledSpan>
+      <img
+        src={plusIcon}
+        draggable={false}
+        style={{
+          userSelect: "none",
+          width: "12px",
+          height: "12px",
+        }}
+      />
     </CircleButton>
   );
 };
 
-const Chrome = ({
-  showHeader,
-  tabs,
-  children,
-  tabEnd,
-  style,
-  onClose,
-  onMinifyClick,
-  onFullscreenClick,
-}) => {
+const Chrome = ({ showHeader, tabs, children, tabEnd, style }) => {
   return (
     <React.Fragment>
-      {showHeader && (
-        <Header>
-          {/* <CloseButton onClick={onClose} />
-          <MinifyButton onClick={onMinifyClick} />
-          <FullscreenButton onClick={onFullscreenClick} /> */}
-        </Header>
-      )}
       <Tabs borderDisable={showHeader} style={style}>
-        {!showHeader && (
-          <HeaderButtonContainer>
-            {/* <CloseButton onClick={onClose} />
-          <MinifyButton onClick={onMinifyClick} />
-          <FullscreenButton onClick={onFullscreenClick} /> */}
-          </HeaderButtonContainer>
-        )}
         {tabs}
         {tabEnd}
       </Tabs>
@@ -236,8 +204,6 @@ Chrome.propTypes = {
   tabEnd: PropTypes.node,
   style: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   onClose: PropTypes.func,
-  onMinifyClick: PropTypes.func,
-  onFullscreenClick: PropTypes.func,
 };
 
 Chrome.defaultProps = {
@@ -246,9 +212,6 @@ Chrome.defaultProps = {
   tabs: <React.Fragment />,
   tabEnd: <React.Fragment />,
   children: <React.Fragment />,
-  onClose: () => {},
-  onMinifyClick: () => {},
-  onFullscreenClick: () => {},
 };
 
 Chrome.Divider = Divider;
