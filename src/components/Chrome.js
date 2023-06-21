@@ -7,54 +7,53 @@ const TAB_COLOR = "#ECEDEC";
 
 const Tabs = styled.div`
   display: flex;
-  height: ${props => props.height || "42px"};
+  align-items: center;
+  min-height: 40px;
   background-color: ${TAB_COLOR};
+  overflow-x: auto;
+  overflow-y: hidden;
 `;
 
 const CircleButton = styled.div`
-  height: ${props => props.length || "16"}px;
-  width: ${props => props.length || "16"}px;
-  border-radius: ${props => props.length / 2 || "8"}px;
-  font-size: ${props => props.fontSize || "12"}px;
-  background-color: ${props => props.color};
-  margin: ${props => props.margin};
+  height: ${(props) => props.length || "16"}px;
+  width: ${(props) => props.length || "16"}px;
+  border-radius: ${(props) => props.length / 2 || "8"}px;
+  font-size: ${(props) => props.fontSize || "12"}px;
+  background-color: ${(props) => props.color};
+  margin: ${(props) => props.margin};
   display: flex;
   justify-content: center;
-  align-items: ${props => props.alignItems};
+  align-items: ${(props) => props.alignItems};
   outline: none;
   &:hover {
-    background-color: ${props => props.hoverColor || "lightgrey"};
+    background-color: ${(props) => props.hoverColor || "lightgrey"};
   }
 `;
 
-const Content = styled.div`
-  height: 100%;
-`;
-
 const StyledTab = styled.div`
-  min-width: 120px;
+  min-width: 200px;
   max-width: 200px;
+  height: 40px;
   display: flex;
-  flex: 1;
-  justify-content: space-between;
-  padding: 0 8px 0 8px;
+  align-items: center;
+  padding: 0 12px 0 12px;
   align-items: center;
   box-sizing: border-box;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
   outline: none;
-  background-color: ${props => (props.isActive ? "white" : "initial")};
+  background-color: ${(props) => (props.isActive ? "white" : "initial")};
   position: relative;
   margin-left: -1px;
   margin-right: -1px;
-  ${props =>
+  ${(props) =>
     props.isActive &&
     `
     z-index: 3;
     border-style: solid;
     border-width: 0;
     border-color: white;`}
-  ${props => `
+  ${(props) => `
     &:hover {
       background-color: ${!props.isActive && (props.hoverColor || "#F2F3F5")};
       z-index: 1;
@@ -90,10 +89,9 @@ const StyledTab = styled.div`
 const Title = styled.span`
   font-size: 12px;
   line-height: 16px;
-  font-family: ${props => props.fontFamily};
   margin: 0;
   margin-top: -2px;
-  margin: ${props => props.margin};
+  margin: ${(props) => props.margin};
   flex: 1;
   text-align: start;
   white-space: nowrap;
@@ -107,19 +105,19 @@ const Title = styled.span`
 
 export const Divider = styled.div`
   background-color: #7c7f82;
-  height: 21px;
+  height: ${(props) => props.height};
+  margin: ${(props) => props.margin};
   width: 1px;
-  margin-top: 10px;
 `;
 
-export const Tab = ({ isActive, title, fontFamily, onClick, onClose }) => {
+export const Tab = ({ isActive, title, onClick, onClose }) => {
   return (
     <StyledTab tabIndex={0} isActive={isActive} onClick={onClick}>
-      <Title fontFamily={fontFamily}>{title}</Title>
+      <Title>{title}</Title>
       <CircleButton
         length={"16"}
         tabIndex={0}
-        margin={`-1px 0px 0px 4px`}
+        margin={"-2px 0px 0px 4px"}
         alignItems={"center"}
         onClick={onClose}
       >
@@ -129,7 +127,7 @@ export const Tab = ({ isActive, title, fontFamily, onClick, onClose }) => {
           style={{
             width: "8px",
             height: "8px",
-            userSelect: "none"
+            userSelect: "none",
           }}
         />
       </CircleButton>
@@ -141,62 +139,40 @@ Tab.propTypes = {
   isActive: PropTypes.bool,
   title: PropTypes.string,
   onClick: PropTypes.func,
-  onClose: PropTypes.func
+  onClose: PropTypes.func,
 };
 
 Tab.defaultProps = {
   isActive: false,
   title: "",
   onClick: () => {},
-  onClose: () => {}
+  onClose: () => {},
 };
 
-export const AddButton = props => {
-  return (
-    <CircleButton
-      tabIndex={0}
-      length={28}
-      fontSize={22}
-      margin={props.margin}
-      alignItems={"center"}
-      onClick={props.onClick}
-    >
-      {"+"}
-    </CircleButton>
-  );
-};
-
-const Chrome = ({ showHeader, tabs, children, tabEnd, style }) => {
+const Chrome = ({ tabs }) => {
   return (
     <React.Fragment>
-      <Tabs borderDisable={showHeader} style={style}>
-        {tabs}
-        {tabEnd}
-      </Tabs>
-      <Content>{children}</Content>
+      <Tabs borderDisable={false}>{tabs}</Tabs>
     </React.Fragment>
   );
 };
 
 Chrome.propTypes = {
-  showHeader: PropTypes.bool,
   tabs: PropTypes.node,
   children: PropTypes.node,
   tabEnd: PropTypes.node,
   style: PropTypes.object, // eslint-disable-line react/forbid-prop-types
-  onClose: PropTypes.func
+  onClose: PropTypes.func,
 };
 
 Chrome.defaultProps = {
-  showHeader: false,
   style: undefined,
   tabs: <React.Fragment />,
   tabEnd: <React.Fragment />,
-  children: <React.Fragment />
+  children: <React.Fragment />,
 };
 
 Chrome.Divider = Divider;
 Chrome.Tab = Tab;
-Chrome.AddButton = AddButton;
 
 export default Chrome;
