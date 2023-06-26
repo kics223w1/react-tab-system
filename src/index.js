@@ -1,3 +1,3 @@
-import Chrome, { Tab, Divider } from "./components/Chrome.js";
+import { Tab, Divider } from "./components/Chrome.js";
 
-export { Tab, Divider, Chrome };
+export { Tab, Divider };
